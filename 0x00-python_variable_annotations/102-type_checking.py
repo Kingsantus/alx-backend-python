@@ -7,7 +7,7 @@ from typing import Tuple, List
 
 def zoom_array(lst: Tuple, factor: int = 2) -> List:
     """TODO: add docstring"""
-    zoomed_in: List = [
+    zoomed_in: Tuple = [
         item for item in lst
         for _ in range(int(factor))
     ]
