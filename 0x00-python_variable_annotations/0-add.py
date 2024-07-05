@@ -3,7 +3,7 @@
 Define a type-annotated function.
 """
 
-def add(a: float, b: float):
+def add(a: float, b: float) -> float:
     """
     Add two float numbers.
     """
