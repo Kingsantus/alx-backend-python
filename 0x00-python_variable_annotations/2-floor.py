@@ -3,6 +3,6 @@
 Define a function for computing the floor of a float.
 """
 
-def floor(n: float) -> float:
+def floor(n: float) -> int:
     """Returns the floor value of a number"""
     return int(n)
