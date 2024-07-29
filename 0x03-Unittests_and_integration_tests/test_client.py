@@ -128,3 +128,43 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         client = GithubOrgClient("google")
         result = client.public_repos(license="Apache-2.0")
         self.assertEqual(result, self.apache2_repos)
+
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    """Integration test class for GithubOrgClient"""
+
+    @classmethod
+    def setUpClass(cls):
+        """Set up patchers and mocks for the test class"""
+        cls.get_patcher = patch('requests.get')
+        cls.mock_get = cls.get_patcher.start()
+
+        def side_effect(url):
+            if 'orgs/google' in url:
+                mock_response = unittest.mock.Mock()
+                mock_response.json.return_value = cls.org_payload
+                return mock_response
+            elif 'orgs/google/repos' in url:
+                mock_response = unittest.mock.Mock()
+                mock_response.json.return_value = cls.repos_payload
+                return mock_response
+            else:
+                raise ValueError("Unexpected URL")
+
+        cls.mock_get.side_effect = side_effect
+
+    @classmethod
+    def tearDownClass(cls):
+        """Stop patchers after tests"""
+        cls.get_patcher.stop()
+
+    def test_public_repos(self):
+        """Test GithubOrgClient.public_repos returns the correct list of repos"""
+        client = GithubOrgClient("google")
+        result = client.public_repos()
+        self.assertEqual(result, self.expected_repos)
+
+    def test_public_repos_with_license(self):
+        """Test GithubOrgClient.public_repos with license filter returns the correct repos"""
+        client = GithubOrgClient("google")
+        result = client.public_repos(license="Apache-2.0")
+        self.assertEqual(result, self.apache2_repos)
